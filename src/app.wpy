@@ -1,0 +1,34 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/color'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#F6F6F6',
+      navigationBarTitleText: '日本传统色',
+      navigationBarTextStyle: 'black'
+    }
+  }
+
+  onLaunch() {
+
+  }
+}
+</script>

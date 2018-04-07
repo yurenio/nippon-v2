@@ -1,0 +1,231 @@
+<style lang="less">
+.panel {
+  padding: 20rpx;
+  box-sizing: border-box;
+  background-color: #F6F6F6;
+
+  .content {
+    height: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .3);
+    border-radius: 5px;
+
+    .color-card {
+      height: 90%;
+      padding-left: 40rpx;
+      padding-right: 40rpx;
+      padding-top: 100rpx;
+      color: white;
+      box-sizing: border-box;
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
+      position: relative;
+      overflow: hidden;
+
+      .color-num {
+        position: absolute;
+        bottom: 100rpx;
+        left: 40rpx;
+      }
+
+      text {
+        display: block;
+      }
+
+      .name {
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      .cname {
+        font-size: 2.4rem;
+        font-weight: bold;
+      }
+
+      .tag {
+        font-size: .8rem;
+      }
+
+      .hexcolor {
+        margin-bottom: 40rpx;
+      }
+
+      .rgbcolor, .hexcolor {
+        font-size: 1.2rem;
+      }
+    }
+
+    .copy-color {
+      height: 10%;
+      overflow: hidden;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+
+      .copy-hexcolor {
+        height: 100%;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+
+        .copy-hexcolor-text {
+          width: 100%;
+          text-align: center;
+          border-right: 1px solid #ccc;
+        }
+      }
+
+      .copy-rgb {
+        height: 100%;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+      }
+    }
+  }
+}
+
+</style>
+
+<template>
+  <view class="panel"
+        style="height: {{ windowHeight }}px;">
+    <view class="content">
+      <view style="background-color: {{ '#' + color }}; color: {{ nameColor }};"
+          class="color-card">
+        <view>
+          <text class="name">{{ name }}</text>
+          <text class="cname">{{ cname }}</text>
+        </view>
+        <view class="color-num">
+          <text class="tag">HexColor</text>
+          <text class="hexcolor">{{ '#' + color }}</text>
+          <text class="tag">RGB</text>
+          <text class="rgbcolor">R: {{ r }}</text>
+          <text class="rgbcolor">G: {{ g }}</text>
+          <text class="rgbcolor">B: {{ b }}</text>
+        </view>
+      </view>
+      <view class="copy-color">
+        <view class="copy-hexcolor" @tap="copyHexcolor">
+          <view class="copy-hexcolor-text">
+            <text>Copy HexColor</text>
+          </view>
+        </view>
+        <view class="copy-rgb" @tap="copyRGB">Copy RGB</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  const tinycolor = require('tinycolor2')
+
+  export default class Color extends wepy.page {
+    data = {
+      id: '',
+      color: '',
+      name: '',
+      cname: '',
+      nameColor: '',
+      displayColor: '',
+      windowHeight: '',
+      rgb: '',
+      r: '',
+      g: '',
+      b: ''
+    }
+
+    onShareAppMessage() {
+      return {
+        title: this.cname + ' - 日本传统色',
+        path: '/pages/color' +
+              '?id=' + this.id +
+              '&color=' + this.color +
+              '&cname=' + this.cname +
+              '&name=' + this.name +
+              '&nameColor=' + this.nameColor +
+              '&displayColor=' + this.displayColor,
+        success: function (res) {
+          wx.showToast({
+            title: '转发成功',
+            icon: 'success',
+            duration: 1000
+          })
+        }
+      }
+    }
+
+    copyHexcolor(event) {
+      wx.setClipboardData({
+        data: '#' + this.color,
+        success: function (res) {
+          wx.getClipboardData({
+            success: function (res) {
+              if (!res.cancel) {
+                wx.showToast({
+                  title: "复制成功",
+                  icon: 'success',
+                  duration: 1000
+                });
+              }
+            }
+          })
+        }
+      })
+    }
+
+    copyRGB(event) {
+      wx.setClipboardData({
+        data: this.rgb,
+        success: function (res) {
+          wx.getClipboardData({
+            success: function (res) {
+              if (!res.cancel) {
+                wx.showToast({
+                  title: "复制成功",
+                  icon: 'success',
+                  duration: 1000
+                });
+              }
+            }
+          })
+        }
+      })
+    }
+
+    onLoad(options) {
+      this.id = options.id
+      this.color = options.color
+      this.name = options.name
+      this.cname = options.cname
+      this.nameColor = options.nameColor
+      this.displayColor = options.displayColor
+
+      wx.setNavigationBarTitle({
+        title: this.cname + ' ' + this.name
+      })
+
+      let res = wx.getSystemInfoSync()
+      this.windowHeight = res.windowHeight
+
+      let rgb = tinycolor(this.color).toRgb()
+      this.r = rgb.r
+      this.g = rgb.g
+      this.b = rgb.b
+
+      this.rgb = tinycolor(this.color).toRgbString()
+    }
+  }
+</script>
