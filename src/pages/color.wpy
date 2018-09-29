@@ -2,11 +2,11 @@
 .panel {
   padding: 20rpx;
   box-sizing: border-box;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
 
   .content {
     height: 100%;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .3);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
     border-radius: 5px;
 
     .color-card {
@@ -42,14 +42,15 @@
       }
 
       .tag {
-        font-size: .8rem;
+        font-size: 0.8rem;
       }
 
       .hexcolor {
         margin-bottom: 40rpx;
       }
 
-      .rgbcolor, .hexcolor {
+      .rgbcolor,
+      .hexcolor {
         font-size: 1.2rem;
       }
     }
@@ -93,26 +94,25 @@
     }
   }
 }
-
 </style>
 
 <template>
   <view class="panel"
         style="height: {{ windowHeight }}px;">
     <view class="content">
-      <view style="background-color: {{ '#' + color }}; color: {{ nameColor }};"
+      <view style="background-color: {{ selectColor.color }}; color: {{ selectColor.nameColor }};"
           class="color-card">
         <view>
-          <text class="name">{{ name }}</text>
-          <text class="cname">{{ cname }}</text>
+          <text class="name">{{ selectColor.name }}</text>
+          <text class="cname">{{ selectColor.cname }}</text>
         </view>
         <view class="color-num">
           <text class="tag">HexColor</text>
-          <text class="hexcolor">{{ '#' + color }}</text>
+          <text class="hexcolor">{{ selectColor.color }}</text>
           <text class="tag">RGB</text>
-          <text class="rgbcolor">R: {{ r }}</text>
-          <text class="rgbcolor">G: {{ g }}</text>
-          <text class="rgbcolor">B: {{ b }}</text>
+          <text class="rgbcolor">R: {{ selectColor.rgb.r }}</text>
+          <text class="rgbcolor">G: {{ selectColor.rgb.g }}</text>
+          <text class="rgbcolor">B: {{ selectColor.rgb.b }}</text>
         </view>
       </view>
       <view class="copy-color">
@@ -128,104 +128,93 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy';
 
-  const tinycolor = require('tinycolor2')
+const tinycolor = require('tinycolor2');
 
-  export default class Color extends wepy.page {
-    data = {
-      id: '',
-      color: '',
-      name: '',
-      cname: '',
-      nameColor: '',
-      displayColor: '',
-      windowHeight: '',
-      rgb: '',
-      r: '',
-      g: '',
-      b: ''
-    }
+export default class Color extends wepy.page {
+  data = {
+    windowHeight: null,
+    selectColor: null
+  };
 
-    onShareAppMessage() {
-      return {
-        title: this.cname + ' - 日本传统色',
-        path: '/pages/color' +
-              '?id=' + this.id +
-              '&color=' + this.color +
-              '&cname=' + this.cname +
-              '&name=' + this.name +
-              '&nameColor=' + this.nameColor +
-              '&displayColor=' + this.displayColor,
-        success: function (res) {
-          wx.showToast({
-            title: '转发成功',
-            icon: 'success',
-            duration: 1000
-          })
-        }
+  onShareAppMessage() {
+    return {
+      title: this.selectColor.cname + ' - 日本传统色',
+      path: '/pages/color?id=' + this.selectColor.id,
+      success: function(res) {
+        wx.showToast({
+          title: '转发成功',
+          icon: 'success',
+          duration: 1000
+        });
       }
-    }
-
-    copyHexcolor(event) {
-      wx.setClipboardData({
-        data: '#' + this.color,
-        success: function (res) {
-          wx.getClipboardData({
-            success: function (res) {
-              if (!res.cancel) {
-                wx.showToast({
-                  title: "复制成功",
-                  icon: 'success',
-                  duration: 1000
-                });
-              }
-            }
-          })
-        }
-      })
-    }
-
-    copyRGB(event) {
-      wx.setClipboardData({
-        data: this.rgb,
-        success: function (res) {
-          wx.getClipboardData({
-            success: function (res) {
-              if (!res.cancel) {
-                wx.showToast({
-                  title: "复制成功",
-                  icon: 'success',
-                  duration: 1000
-                });
-              }
-            }
-          })
-        }
-      })
-    }
-
-    onLoad(options) {
-      this.id = options.id
-      this.color = options.color
-      this.name = options.name
-      this.cname = options.cname
-      this.nameColor = options.nameColor
-      this.displayColor = options.displayColor
-
-      wx.setNavigationBarTitle({
-        title: this.cname + ' ' + this.name
-      })
-
-      let res = wx.getSystemInfoSync()
-      this.windowHeight = res.windowHeight
-
-      let rgb = tinycolor(this.color).toRgb()
-      this.r = rgb.r
-      this.g = rgb.g
-      this.b = rgb.b
-
-      this.rgb = tinycolor(this.color).toRgbString()
-    }
+    };
   }
+
+  copyHexcolor(event) {
+    wx.setClipboardData({
+      data: this.selectColor.color,
+      success: function(res) {
+        wx.getClipboardData({
+          success: function(res) {
+            if (!res.cancel) {
+              wx.showToast({
+                title: '复制成功',
+                icon: 'success',
+                duration: 1000
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+
+  copyRGB(event) {
+    wx.setClipboardData({
+      data: tinycolor(this.selectColor.color).toRgbString(),
+      success: function(res) {
+        wx.getClipboardData({
+          success: function(res) {
+            if (!res.cancel) {
+              wx.showToast({
+                title: '复制成功',
+                icon: 'success',
+                duration: 1000
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+
+  onLoad(options) {
+    this.getSystemInfo();
+    this.checkColor(options.id);
+    this.setNavigationBarTitle();
+  }
+
+  getSystemInfo() {
+    this.windowHeight = wx.getSystemInfoSync().windowHeight;
+  }
+
+  checkColor(id) {
+    this.$parent.data.colors.forEach(element => {
+      if (element.id === +id) {
+        element.rgb = tinycolor(element.color).toRgb();
+        this.selectColor = element;
+        this.$apply();
+      }
+    });
+  }
+
+  setNavigationBarTitle() {
+    let { name, cname } = this.data.selectColor;
+    wx.setNavigationBarTitle({
+      title: cname + ' ' + name
+    });
+  }
+}
 </script>
