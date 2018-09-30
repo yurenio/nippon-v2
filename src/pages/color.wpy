@@ -133,6 +133,11 @@ import wepy from 'wepy';
 const tinycolor = require('tinycolor2');
 
 export default class Color extends wepy.page {
+
+  config = {
+    disableScroll: true
+  }
+
   data = {
     windowHeight: null,
     selectColor: null
