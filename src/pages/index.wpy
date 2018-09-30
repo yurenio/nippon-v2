@@ -79,7 +79,12 @@
       colors: []
     }
 
-    onLoad() {
+    onLoad(option) {
+      if (option.id) {
+        wx.navigateTo({
+          url: './color?id=' + option.id
+        });
+      }
       this.colors = this.$parent.data.colors
       this.$apply()
     }
