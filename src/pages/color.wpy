@@ -133,6 +133,7 @@ import wepy from 'wepy';
 const tinycolor = require('tinycolor2');
 
 export default class Color extends wepy.page {
+
   data = {
     windowHeight: null,
     selectColor: null
@@ -141,7 +142,7 @@ export default class Color extends wepy.page {
   onShareAppMessage() {
     return {
       title: this.selectColor.cname + ' - 日本传统色',
-      path: '/pages/color?id=' + this.selectColor.id,
+      path: '/pages/index?id=' + this.selectColor.id,
       success: function(res) {
         wx.showToast({
           title: '转发成功',
