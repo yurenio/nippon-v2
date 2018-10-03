@@ -57,11 +57,6 @@
           style="background-color: {{ item.color }};"
           @tap="click"
           data-id="{{ item.id }}"
-          data-name="{{ item.name }}"
-          data-color="{{ item.color }}"
-          data-cname="{{ item.cname }}"
-          data-nameColor="{{ item.nameColor }}"
-          data-displayColor="{{ item.displayColor }}"
           >
       <text class="name"
             style="color: {{ item.nameColor }}">{{ item.name }}</text>
