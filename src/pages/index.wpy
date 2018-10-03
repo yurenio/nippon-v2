@@ -3,6 +3,13 @@
   padding: 20rpx;
   background-color: #F6F6F6;
 
+  .list-name {
+    font-size: 14px;
+    color: #999;
+    line-height: 1.6;
+    margin-bottom: 10rpx;
+  }
+
   .card {
     margin-bottom: 20rpx;
     text-align: left;
@@ -42,6 +49,8 @@
 
 <template>
   <view class="panel">
+    <!-- 为「收藏」准备 -->
+    <!-- <view class="list-name"><text>日本传统色</text></view> -->
     <view wx:for="{{ colors }}"
           wx:key="id"
           class="card"
