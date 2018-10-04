@@ -264,8 +264,8 @@ export default class extends wepy.app {
       { id: 230, cname: '似紫', name: 'NISEMURASAKI', color: '#562E37' },
       { id: 231, cname: '躑躅', name: 'TSUTSUJI', color: '#E03C8A' },
       { id: 232, cname: '紫鳶', name: 'MURASAKITOBI', color: '#60373E' },
-      { id: 233, cname: '白練', name: 'SHIRONERI', color: '#FCFAF2', nameColor: '#000' },
-      { id: 234, cname: '胡粉', name: 'GOFUN', color: '#FFFFFB', nameColor: '#000' },
+      { id: 233, cname: '白練', name: 'SHIRONERI', color: '#FCFAF2' },
+      { id: 234, cname: '胡粉', name: 'GOFUN', color: '#FFFFFB' },
       { id: 235, cname: '白鼠', name: 'SHIRONEZUMI', color: '#BDC0BA' },
       { id: 236, cname: '銀鼠', name: 'GINNEZUMI', color: '#91989F' },
       { id: 237, cname: '鉛', name: 'NAMARI', color: '#787878' },
@@ -296,6 +296,12 @@ export default class extends wepy.app {
         element.displayColor = tinycolor(hexColor).darken().toString();
       } else {
         element.displayColor = tinycolor(hexColor).brighten().toString();
+      }
+
+      if (tinycolor(hexColor).getLuminance() <= 0.6) {
+        element.nameColor = '#FFF';
+      } else {
+        element.nameColor = '#000';
       }
     })
   }
