@@ -52,7 +52,7 @@ if (prod) {
   // module.exports.compilers['sass'] = {outputStyle: 'compressed'}
 
   // 压缩less
-  module.exports.compilers['less'] = {compress: true}
+  module.exports.compilers['wepy-compiler-less'] = {compress: true}
 
   // 压缩js
   module.exports.plugins = {

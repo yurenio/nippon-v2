@@ -26,6 +26,7 @@ export default class extends wepy.app {
   };
 
   data = {
+    isIPX: false,
     colors: [
       { id: 1, cname: '撫子', name: 'NADESHIKO', color: '#DC9FB4' },
       { id: 2, cname: '紅梅', name: 'KOHBAI', color: '#E16B8C' },
@@ -286,7 +287,20 @@ export default class extends wepy.app {
   };
 
   onLaunch() {
+    this.checkIPX();
     this.changeColors();
+  }
+
+  checkIPX() {
+    let isIPX = false;
+    wx.getSystemInfo({
+      success: function(res) {
+        if (res.model.indexOf('iPhone X') == 0) {
+          isIPX = true;
+        }
+      }
+    })
+    this.data.isIPX = isIPX;
   }
 
   changeColors() {

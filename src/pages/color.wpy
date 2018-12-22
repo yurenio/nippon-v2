@@ -94,10 +94,14 @@
     }
   }
 }
+
+.panel-IPX {
+  padding-bottom: 64rpx;
+}
 </style>
 
 <template>
-  <view class="panel"
+  <view class="panel {{isIPX ? 'panel-IPX' : ''}}"
         style="height: {{ windowHeight }}px;">
     <view class="content">
       <view style="background-color: {{ selectColor.color }}; color: {{ selectColor.nameColor }};"
@@ -140,7 +144,8 @@ export default class Color extends wepy.page {
 
   data = {
     windowHeight: null,
-    selectColor: null
+    selectColor: null,
+    isIPX: false
   };
 
   onShareAppMessage() {
@@ -199,6 +204,7 @@ export default class Color extends wepy.page {
     this.getSystemInfo();
     this.checkColor(options.id);
     this.setNavigationBarTitle();
+    this.isIPX = this.$parent.data.isIPX;
   }
 
   getSystemInfo() {
